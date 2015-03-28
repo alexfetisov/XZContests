@@ -1,4 +1,5 @@
 // Author: alexfetisov
+//
 
 public class TestAllWorkClass {
     public static int testIt() {
