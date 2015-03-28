@@ -4,6 +4,6 @@ import org.junit.Test;
 public class TestAllWorkClassTest {
     @Test
     public void testSingleMethod() {
-        Assert.assertEquals(4, TestAllWorkClass.testIt());
+        Assert.assertEquals(5, TestAllWorkClass.testIt());
     }
 }
