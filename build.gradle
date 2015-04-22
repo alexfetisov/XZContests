@@ -1,16 +1,20 @@
+import javax.tools.ToolProvider
+
+apply plugin: 'application'
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.6
 version = '1.0'
 
 repositories {
     mavenCentral()
 }
 
-
-
+mainClassName = 'inliner.Linker'
 
 dependencies {
     compile 'org.jsoup:jsoup:1.7.2'
+    compile (files(((URLClassLoader) ToolProvider.getSystemToolClassLoader()).getURLs()))
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
