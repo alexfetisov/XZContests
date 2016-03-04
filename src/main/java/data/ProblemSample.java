@@ -1,10 +1,10 @@
 package data;// Author: alexfetisov
 
-public class InputOutput {
-    String input;
-    String output;
+public class ProblemSample {
+    private String input;
+    private String output;
 
-    public InputOutput(String input, String output) {
+    public ProblemSample(String input, String output) {
         this.input = input;
         this.output = output;
     }

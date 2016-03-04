@@ -2,11 +2,14 @@
 
 package parsers;
 
-import data.InputOutput;
+import data.Problem;
+import data.ProblemSample;
 
 import java.net.URL;
 import java.util.List;
 
 public interface IContestParser {
-    List<InputOutput> parse(final String data);
+    Problem parseSingleProblem(final URL url);
+
+    List<ProblemSample> parse(final String data);
 }
