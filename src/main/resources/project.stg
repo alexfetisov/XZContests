@@ -1,0 +1,114 @@
+rootCMakeLists(name, includes) ::= <<
+cmake_minimum_required(VERSION 3.4)
+project(<name>)
+
+include("cmake/GTest.cmake")
+find_package(Boost COMPONENTS system filesystem regex unit_test_framework)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
+  -Wall -Wextra -Wshadow -Wfloat-equal -Wconversion \
+  -Wno-sign-conversion -Wno-sign-compare")
+
+
+set(CLANG_INLINER_FLAGS -target x86_64-aple-darwin
+<includes:{include |         -isystem <include>}; separator="\n">
+        -I ${CMAKE_CURRENT_SOURCE_DIR}/lib --std=c++11)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
+file(GLOB_RECURSE subprojects RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CMakeLists.txt)
+foreach(subproject ${subprojects})
+    get_filename_component(subdir ${subproject} DIRECTORY)
+    if (NOT ${subdir} MATCHES "^(archive.*|)$")
+        add_subdirectory(${subdir})
+    endif()
+endforeach()
+>>
+
+gtestCMake() ::= <<
+# gtest.
+
+include(ExternalProject)
+
+ExternalProject_Add(gtest_ext
+        URL "http://googletest.googlecode.com/files/gtest-1.7.0.zip"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/third-party/gtest-build"
+        SOURCE_DIR "${CMAKE_BINARY_DIR}/third-party/gtest-src"
+        INSTALL_COMMAND ""
+        CMAKE_ARGS "${gtest_cmake_args}"
+        "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+        )
+set(GTEST_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/third-party/gtest-src/include")
+link_directories(
+        "${CMAKE_BINARY_DIR}/third-party/gtest-build"
+)
+
+enable_testing()
+
+find_package(Threads)
+
+function(cxx_test name sources)
+    add_executable(${name} ${sources})
+    target_link_libraries(${name} ${ARGN} gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
+    set_property(TARGET ${name} APPEND PROPERTY INCLUDE_DIRECTORIES ${GTEST_INCLUDE_DIRS})
+    add_dependencies(${name} gtest_ext)
+    # Working directory: where the dlls are installed.
+    add_test(NAME ${name}
+            COMMAND ${name} "--gtest_break_on_failure")
+endfunction()
+>>
+
+preludeh() ::= <<
+#pragma once
+
+#include \<algorithm>
+#include \<cassert>
+#include \<cstring>
+#include \<functional>
+#include \<iostream>
+#include \<map>
+#include \<set>
+#include \<sstream>
+#include \<string>
+#include \<tuple>
+#include \<unordered_map>
+#include \<unordered_set>
+#include \<vector>
+
+#define forn(t, i, n) for (t i = 0; i \< (n); ++i)
+#define foran(t, i, a, n) for (t i = (a); i \< (n); ++i)
+#define rforn(t, i, n) for (t i = (n) - 1; i >= 0; --i)
+#define rforan(t, i, a, n) for (t i = (n) - 1; i >= (a); --i)
+#define all(c) c.begin(), c.end()
+
+using namespace std;
+
+bool __hack = std::ios::sync_with_stdio(false);
+auto __hack1 = cin.tie(nullptr);
+
+>>
+
+test_utilh() ::= <<
+#include \<boost/test/execution_monitor.hpp>
+#include \<gtest/gtest.h>
+#include "prelude.h"
+
+namespace testutil {
+    string trim(string s) {
+        assert(s[0] == '\n' && s[s.size() - 1] == '\n');
+        return s.substr(1, s.size() - 2);
+    }
+
+    template\<int TL, class F, class... Args>
+    typename result_of\<F(Args...)>::type exec(F&& f, Args&&... args) {
+        boost::execution_monitor mon;
+        mon.p_timeout.set(TL);
+        typename result_of\<F(Args...)>::type ret;
+        mon.vexecute(boost::function\<void()>([&]() {
+            ret = f(std::forward\<Args>(args)...);
+        }));
+        return ret;
+    }
+}
+>>

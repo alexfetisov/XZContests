@@ -1,17 +1,19 @@
 apply plugin: 'application'
 apply plugin: 'java'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
     mavenCentral()
 }
 
-//mainClassName = 'inliner.Linker'
+mainClassName = 'org.xzteam.cpphelper.cli.Main'
 
 dependencies {
     compile 'org.jsoup:jsoup:1.7.2'
+    compile 'org.antlr:stringtemplate:4.0.2'
+    compile 'com.beust:jcommander:1.48'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
