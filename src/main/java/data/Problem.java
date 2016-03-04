@@ -1,13 +1,13 @@
 package data;// Author: alexfetisov
 
+import constants.Sourse;
+import parsers.CodeForcesContestParser;
+import parsers.IContestParser;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import constants.Sourse;
-import parsers.CodeForcesContestParser;
-import parsers.IContestParser;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Problem {
 
@@ -19,12 +19,12 @@ public class Problem {
         }
     }
 
-    public Problem(final Sourse source, final URL url) throws NotImplementedException {
+    public Problem(final Sourse source, final URL url) throws UnsupportedOperationException {
         IContestParser parser;
         if (source == Sourse.CODEFORCES) {
             parser = new CodeForcesContestParser();
         } else {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         Problem problem = parser.parseSingleProblem(url);

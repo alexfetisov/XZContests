@@ -1,5 +1,6 @@
 package parsers;
 
+import data.Problem;
 import data.ProblemSample;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,7 +24,7 @@ public class CodeForcesContestParser implements IContestParser {
         final Elements inputElements = document.getElementsByClass("input");
         final Elements outputElements = document.getElementsByClass("output");
         final int numberOfElements = inputElements.size();
-        List<ProblemSample> ios = new ArrayList<ProblemSample>(numberOfElements);
+        List<ProblemSample> ios = new ArrayList<>(numberOfElements);
         for (int i = 0; i < numberOfElements; ++i) {
             final Element input = inputElements.get(i);
             final Element output = outputElements.get(i);
@@ -54,6 +55,12 @@ public class CodeForcesContestParser implements IContestParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayList<ProblemSample>();
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Problem parseSingleProblem(URL url) {
+        //TODO
+        throw new UnsupportedOperationException();
     }
 }
