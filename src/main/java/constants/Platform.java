@@ -1,5 +1,5 @@
 package constants;
 
-public enum Sourse {
+public enum Platform {
     CODEFORCES
 }
