@@ -1,14 +1,14 @@
 package org.xzteam.cpphelper.parsers;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.xzteam.cpphelper.constants.Platform;
-import org.xzteam.cpphelper.data.Problem;
-import org.xzteam.cpphelper.data.ProblemBuilder;
-import org.xzteam.cpphelper.data.ProblemSample;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Problem;
+import org.xzteam.cpphelper.data.ProblemBuilder;
+import org.xzteam.cpphelper.data.ProblemSample;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,12 +31,13 @@ public class CodeForcesContestParser implements IContestParser {
     Problem getProblem(String data) {
         final Document document = Jsoup.parse(data);
         final String titleWithLetter = document.getElementsByClass("title").first().ownText();
-        final int id = getProblemId(titleWithLetter);
+        String id = getProblemId(titleWithLetter);
         final String title;
-        if (id != -1) {
+        if (id != null) {
             title = titleWithLetter.substring(2).trim();
         } else {
             title = titleWithLetter.trim();
+            id = title.toLowerCase().replaceAll("[^a-z0-9]+", "_");
         }
         final int timeLimit = Integer.parseInt(
             document.getElementsByClass("time-limit").first().ownText().split(" ")[0]);
@@ -73,13 +74,11 @@ public class CodeForcesContestParser implements IContestParser {
     }
 
     @VisibleForTesting
-    int getProblemId(final String title) {
-        for (char letter = 'A'; letter <= 'Z'; ++letter) {
-            if (title.startsWith("" + letter + ". ")) {
-                return letter - 'A';
-            }
+    String getProblemId(final String title) {
+        if (title.length() > 1 && title.charAt(1) == '.' && Character.isUpperCase(title.charAt(0))) {
+            return title.substring(0, 1);
         }
-        return -1;
+        return null;
     }
 
     @VisibleForTesting

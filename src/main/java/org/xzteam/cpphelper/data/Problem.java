@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Problem {
 
-    Problem(final Platform platform, final String title, int id, int memoryLimit, int timeLimit, List<ProblemSample> samples) {
+    Problem(final Platform platform, final String title, String id, int memoryLimit, int timeLimit, List<ProblemSample> samples) {
         this.platform = platform;
         this.title = title;
         this.id = id;
@@ -24,7 +24,7 @@ public class Problem {
         return title;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -42,7 +42,7 @@ public class Problem {
 
     //TODO add optional contest field
     private final String title;
-    private final int id;
+    private final String id;
     private final int memoryLimit;
     private final int timeLimit;
     private final List<ProblemSample> samples;

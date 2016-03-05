@@ -7,7 +7,7 @@ import java.util.List;
 public class ProblemBuilder {
     private Platform platform;
     private String title;
-    private int id;
+    private String id;
     private int memoryLimit;
     private int timeLimit;
     private List<ProblemSample> samples;
@@ -22,7 +22,7 @@ public class ProblemBuilder {
         return this;
     }
 
-    public ProblemBuilder setId(int id) {
+    public ProblemBuilder setId(String id) {
         this.id = id;
         return this;
     }

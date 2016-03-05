@@ -21,7 +21,7 @@ public class CodeForcesContestParserTest {
         CodeForcesContestParser parser = new CodeForcesContestParser();
         final Problem problem = parser.getProblem(data);
 
-        Assert.assertEquals(0, problem.getId());
+        Assert.assertEquals("A", problem.getId());
         Assert.assertEquals(256, problem.getMemoryLimit());
         Assert.assertEquals(1, problem.getTimeLimit());
         Assert.assertEquals(Platform.CODEFORCES, problem.getPlatform());
@@ -41,7 +41,7 @@ public class CodeForcesContestParserTest {
         CodeForcesContestParser parser = new CodeForcesContestParser();
         final Problem problem = parser.getProblem(data);
 
-        Assert.assertEquals(3, problem.getId());
+        Assert.assertEquals("D", problem.getId());
         Assert.assertEquals(256, problem.getMemoryLimit());
         Assert.assertEquals(2, problem.getTimeLimit());
         Assert.assertEquals(Platform.CODEFORCES, problem.getPlatform());
@@ -58,28 +58,29 @@ public class CodeForcesContestParserTest {
     @Test
     public void testProblemIdParsing() {
         CodeForcesContestParser parser = new CodeForcesContestParser();
-        Assert.assertEquals(-1, parser.getProblemId("Some title"));
-        Assert.assertEquals(25, parser.getProblemId("Z. Some title"));
-        Assert.assertEquals(0, parser.getProblemId("A. Some title"));
-        Assert.assertEquals(1, parser.getProblemId("B. Some title"));
-        Assert.assertEquals(10, parser.getProblemId("K. Some title"));
-        Assert.assertEquals(-1, parser.getProblemId("a. Some title"));
-        Assert.assertEquals(-1, parser.getProblemId("B Some title"));
-        Assert.assertEquals(-1, parser.getProblemId("BC. Some title"));
+        Assert.assertEquals(null, parser.getProblemId("Some title"));
+        Assert.assertEquals("Z", parser.getProblemId("Z. Some title"));
+        Assert.assertEquals("A", parser.getProblemId("A. Some title"));
+        Assert.assertEquals("B", parser.getProblemId("B. Some title"));
+        Assert.assertEquals("K", parser.getProblemId("K. Some title"));
+        Assert.assertEquals(null, parser.getProblemId("a. Some title"));
+        Assert.assertEquals(null, parser.getProblemId("B Some title"));
+        Assert.assertEquals(null, parser.getProblemId("BC. Some title"));
     }
 
     @Test
     public void integrationTest() throws IOException {
         CodeForcesContestParser parser = new CodeForcesContestParser();
         final Problem problem = parser.parseSingleProblem(new URL("http://codeforces.com/contest/632/problem/F"));
-        Assert.assertEquals(problem.getSamples(),
-                            Arrays.asList(
+        Assert.assertEquals(Arrays.asList(
                                 new ProblemSample("3\n0 1 2\n1 0 2\n2 2 0\n", "MAGIC\n"),
                                 new ProblemSample("2\n0 1\n2 3\n", "NOT MAGIC\n"),
-                                new ProblemSample("4\n0 1 2 3\n1 0 3 4\n2 3 0 5\n3 4 5 0\n", "NOT MAGIC\n")));
-        Assert.assertEquals(problem.getTitle(), "Magic Matrix");
-        Assert.assertEquals(problem.getTimeLimit(), 5);
-        Assert.assertEquals(problem.getMemoryLimit(), 512);
+                                new ProblemSample("4\n0 1 2 3\n1 0 3 4\n2 3 0 5\n3 4 5 0\n", "NOT MAGIC\n")),
+                            problem.getSamples());
+        Assert.assertEquals("Magic Matrix", problem.getTitle());
+        Assert.assertEquals(5, problem.getTimeLimit());
+        Assert.assertEquals(512, problem.getMemoryLimit());
+        Assert.assertEquals("F", problem.getId());
     }
 
     String getData(final String fileName) throws IOException, URISyntaxException {
