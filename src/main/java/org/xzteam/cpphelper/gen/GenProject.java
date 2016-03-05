@@ -32,6 +32,7 @@ public class GenProject {
         ret.put("cmake/gtest.cmake", getTemplate("gtestCMake").render());
         ret.put("lib/prelude.h", getTemplate("preludeh").render());
         ret.put("lib/test_util.h", getTemplate("test_utilh").render());
+        ret.put("lib/rand_util.h", getTemplate("rand_utilh").render());
         return ret;
     }
 
