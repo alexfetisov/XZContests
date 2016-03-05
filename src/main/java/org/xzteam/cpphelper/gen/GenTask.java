@@ -39,6 +39,9 @@ public class GenTask {
             if (template.getAttributes().containsKey("samples")) {
                 template.add("samples", problem.getSamples());
             }
+            if (template.getAttributes().containsKey("tl")) {
+                template.add("tl", problem.getTimeLimit());
+            }
         }
         return template;
     }

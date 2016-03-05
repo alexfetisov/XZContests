@@ -101,7 +101,17 @@ namespace testutil {
     }
 
     template\<int TL, class F, class... Args>
-    typename result_of\<F(Args...)>::type exec(F&& f, Args&&... args) {
+    typename enable_if\<is_void\<typename result_of\<F(Args...)>::type>::value>::type exec(F&& f, Args&&... args) {
+        boost::execution_monitor mon;
+        mon.p_timeout.set(TL);
+        mon.vexecute(boost::function\<void()>([&]() {
+            f(std::forward\<Args>(args)...);
+        }));
+    }
+
+    template\<int TL, class F, class... Args>
+    typename enable_if\<!is_void\<typename result_of\<F(Args...)>::type>::value,
+            typename result_of\<F(Args...)>::type>::type exec(F&& f, Args&&... args) {
         boost::execution_monitor mon;
         mon.p_timeout.set(TL);
         typename result_of\<F(Args...)>::type ret;
@@ -109,6 +119,29 @@ namespace testutil {
             ret = f(std::forward\<Args>(args)...);
         }));
         return ret;
+    }
+
+    template\<int TL, class F, class C>
+    void testSolution(F solve, C checker, const string& inString, const string& ansString) {
+        cout \<\< inString \<\< "\n";
+        cout \<\< "--------------\n";
+        istringstream sin(inString), sans(ansString);
+        stringstream sout;
+        exec\<TL>(solve, sin, sout);
+        cout \<\< sout.str() \<\< "\n";
+        sin.clear();
+        sout.clear();
+        checker(sin, sout, sans);
+    };
+
+    void compareStreams(istream &out, istream &ans) {
+        string ansToken, outToken;
+        while (ans && out) {
+            ans >\> ansToken;
+            out >\> outToken;
+            ASSERT_EQ(ansToken, outToken);
+            ASSERT_EQ(!!ans, !!out);
+        }
     }
 }
 >>

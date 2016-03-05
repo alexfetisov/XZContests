@@ -42,15 +42,23 @@ TEST(<prefix>, sample<i>) {
 <sample.input>)_TEST_");
     string ansString = testutil::trim(R"_TEST_(
 <sample.output>)_TEST_");
-//TODO
+    testutil::testSolution\<TL>(solve, checker, inString, ansString);
 }
 >>
 
-testscpp(prefix, samples) ::= <<
+testscpp(prefix, samples, tl) ::= <<
 #include "prelude.h"
 #include "main.h"
 #include "rand_util.h"
 #include "test_util.h"
+
+
+const int TL = <tl>;
+
+
+void checker(istream& in, istream& out, istream& ans) {
+    testutil::compareStreams(out, ans);
+}
 
 <samples : {sample | <sample_test(prefix, sample, i)>};  separator="\n\n">
 >>
