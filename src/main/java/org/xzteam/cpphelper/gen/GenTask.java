@@ -1,26 +1,22 @@
 package org.xzteam.cpphelper.gen;
 
-import org.xzteam.cpphelper.data.ProblemSample;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
-import org.xzteam.cpphelper.model.TaskId;
+import org.xzteam.cpphelper.data.Problem;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GenTask {
     private STGroup st = new STGroupFile("task.stg");
-    private TaskId id;
-    private List<ProblemSample> samples = Arrays.asList(new ProblemSample("aba", "caba"), new ProblemSample("daba", "caba"));
+    private Problem problem;
 
     public GenTask() {
     }
 
-    public GenTask setId(TaskId id) {
-        this.id = id;
+    public GenTask setProblem(Problem problem) {
+        this.problem = problem;
         return this;
     }
 
@@ -36,12 +32,12 @@ public class GenTask {
     private ST getTemplate(String templateName) {
         ST template = st.getInstanceOf(templateName);
         if (template.getAttributes() != null) {
-            String prefix = id.getPrefix();
+            String prefix = problem.getPrefix();
             if (template.getAttributes().containsKey("prefix")) {
                 template.add("prefix", prefix);
             }
             if (template.getAttributes().containsKey("samples")) {
-                template.add("samples", samples);
+                template.add("samples", problem.getSamples());
             }
         }
         return template;

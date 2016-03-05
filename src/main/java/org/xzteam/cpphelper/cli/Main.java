@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.converters.PathConverter;
 import org.xzteam.cpphelper.cli.commands.Command;
 import org.xzteam.cpphelper.cli.commands.InitCommand;
+import org.xzteam.cpphelper.cli.commands.ParseCommand;
 import org.xzteam.cpphelper.cli.commands.TaskCommand;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Main {
         jc.setProgramName("cpphelper-cli");
         jc.addCommand(new InitCommand());
         jc.addCommand(new TaskCommand());
+        jc.addCommand(new ParseCommand());
         try {
             jc.parse(args);
             if (jc.getParsedCommand() == null || main.help) {

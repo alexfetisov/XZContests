@@ -18,6 +18,14 @@ public interface IContestParser {
         .put(Platform.CODEFORCES, new CodeForcesContestParser())
         .build();
 
+    static Problem parse(final URL url) throws UnsupportedOperationException, IOException {
+        Platform platform = Platform.findPlatform(url);
+        if (url == null) {
+            throw new IllegalArgumentException("Platform not supported yet");
+        }
+        return IContestParser.PARSERS.get(platform).parseSingleProblem(url);
+    }
+
     static Problem parse(final Platform platform, final URL url) throws UnsupportedOperationException, IOException {
         return IContestParser.PARSERS.get(platform).parseSingleProblem(url);
     }

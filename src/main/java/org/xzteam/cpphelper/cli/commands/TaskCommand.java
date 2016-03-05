@@ -4,32 +4,49 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.xzteam.cpphelper.cli.FileUtil;
 import org.xzteam.cpphelper.cli.Main;
+import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Problem;
+import org.xzteam.cpphelper.data.ProblemBuilder;
 import org.xzteam.cpphelper.gen.GenTask;
-import org.xzteam.cpphelper.model.TaskId;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Collections;
 import java.util.Map;
 
 @Parameters(commandNames = "task", commandDescription = "Generate task")
 public class TaskCommand implements Command {
     @Parameter(description = "Platform", names = {"-p", "--platform"}, required = true)
-    String platform;
+    Platform platform;
 
-    @Parameter(description = "Contest", names = {"-c", "--contest"})
-    String contest = null;
+    @Parameter(description = "Contest id", names = {"-c", "--contest"})
+    String contestId = null;
 
-    @Parameter(description = "Task", names = {"-t", "--task"}, required = true)
-    String task;
+    @Parameter(description = "Task id", names = {"-t", "--task_id"}, required = true)
+    String taskId;
+
+    @Parameter(description = "Time limit", names = {"--tl"})
+    int timeLimit = 1;
+
+    @Parameter(description = "Memory limit", names = {"--ml"})
+    int memoryLimit = 64;
 
     @Override
     public void execute(Main mainArgs) throws IOException {
         try {
-            TaskId id = new TaskId(platform, contest, task);
+            //TODO need a way to specify samples
+            final Problem problem = new ProblemBuilder()
+                .setPlatform(platform)
+                .setId(taskId)
+                .setContestId(contestId)
+                .setSamples(Collections.emptyList())
+                .setTimeLimit(timeLimit)
+                .setMemoryLimit(memoryLimit)
+                .createProblem();
             Map<String, String> treeDef = new GenTask()
-                .setId(id)
+                .setProblem(problem)
                 .gen();
-            FileUtil.generateTree(mainArgs.dir.resolve(id.getDir()), treeDef);
+            FileUtil.generateTree(mainArgs.dir.resolve(problem.getDir()), treeDef);
         } catch (FileAlreadyExistsException e) {
             System.err.printf("%s is not a directory, aborting.\n", e.getFile());
         }

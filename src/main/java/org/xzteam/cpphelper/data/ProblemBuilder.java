@@ -8,6 +8,7 @@ public class ProblemBuilder {
     private Platform platform;
     private String title;
     private String id;
+    private String contestId;
     private int memoryLimit;
     private int timeLimit;
     private List<ProblemSample> samples;
@@ -42,7 +43,12 @@ public class ProblemBuilder {
         return this;
     }
 
+    public ProblemBuilder setContestId(String contestId) {
+        this.contestId = contestId;
+        return this;
+    }
+
     public Problem createProblem() {
-        return new Problem(platform, title, id, memoryLimit, timeLimit, samples);
+        return new Problem(platform, title, id, contestId, memoryLimit, timeLimit, samples);
     }
 }

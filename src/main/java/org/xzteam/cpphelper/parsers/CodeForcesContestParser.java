@@ -1,6 +1,7 @@
 package org.xzteam.cpphelper.parsers;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,21 +11,19 @@ import org.xzteam.cpphelper.data.Problem;
 import org.xzteam.cpphelper.data.ProblemBuilder;
 import org.xzteam.cpphelper.data.ProblemSample;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CodeForcesContestParser implements IContestParser {
     private static final int TIMEOUT = 10000;
 
     @Override
     public Problem parseSingleProblem(URL url) throws IOException {
-        String response = getPageFromUrl(url);
-        return getProblem(response);
+        return getProblem(IOUtils.toString(url));
     }
 
     @VisibleForTesting
@@ -39,6 +38,8 @@ public class CodeForcesContestParser implements IContestParser {
             title = titleWithLetter.trim();
             id = title.toLowerCase().replaceAll("[^a-z0-9]+", "_");
         }
+        final Element contestLink = document.select("ul.second-level-menu-list li a").first();
+        final String contestId = contestLink == null ? null : getContestId(contestLink.attr("href"));
         final int timeLimit = Integer.parseInt(
             document.getElementsByClass("time-limit").first().ownText().split(" ")[0]);
         final int memoryLimit = Integer.parseInt(
@@ -65,6 +66,7 @@ public class CodeForcesContestParser implements IContestParser {
 
         return new ProblemBuilder()
             .setId(id)
+            .setContestId(contestId)
             .setMemoryLimit(memoryLimit)
             .setTimeLimit(timeLimit)
             .setPlatform(Platform.CODEFORCES)
@@ -74,24 +76,26 @@ public class CodeForcesContestParser implements IContestParser {
     }
 
     @VisibleForTesting
-    String getProblemId(final String title) {
-        if (title.length() > 1 && title.charAt(1) == '.' && Character.isUpperCase(title.charAt(0))) {
-            return title.substring(0, 1);
+    String getContestId(String link) {
+        final Pattern pContest = Pattern.compile("/contest/(\\d+)");
+        final Pattern pGym = Pattern.compile("/gym/(\\d+)");
+        Matcher m = pContest.matcher(link);
+        if (m.matches()) {
+            return m.group(1);
+        }
+        m = pGym.matcher(link);
+        if (m.matches()) {
+            return "gym" + m.group(1);
         }
         return null;
     }
 
     @VisibleForTesting
-    String getPageFromUrl(URL url) throws IOException {
-        URLConnection connection = url.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+    String getProblemId(final String title) {
+        if (title.length() > 1 && title.charAt(1) == '.' && Character.isUpperCase(title.charAt(0))) {
+            return title.substring(0, 1);
         }
-        in.close();
-        return response.toString();
+        return null;
     }
 
 

@@ -1,16 +1,15 @@
 package org.xzteam.cpphelper.parsers;// Author: alexfetisov
 
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.junit.Test;
 import org.xzteam.cpphelper.constants.Platform;
 import org.xzteam.cpphelper.data.Problem;
 import org.xzteam.cpphelper.data.ProblemSample;
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class CodeForcesContestParserTest {
@@ -84,6 +83,6 @@ public class CodeForcesContestParserTest {
     }
 
     String getData(final String fileName) throws IOException, URISyntaxException {
-        return new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("codeforces/" + fileName + ".html").toURI())));
+        return IOUtils.toString(getClass().getClassLoader().getResource("codeforces/" + fileName + ".html"));
     }
 }

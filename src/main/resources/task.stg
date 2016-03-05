@@ -39,8 +39,7 @@ int main() {
 sample_test(prefix, sample, i) ::= <<
 TEST(<prefix>, sample<i>) {
     string inString = testutil::trim(R"_TEST_(
-<sample.input>
-)_TEST_");
+<sample.input>)_TEST_");
     string ansString = testutil::trim(R"_TEST_(
 <sample.output>)_TEST_");
 //TODO
