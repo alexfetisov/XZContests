@@ -17,7 +17,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class CodeForcesContestParser implements IContestParser {
     private static final int TIMEOUT = 10000;

@@ -42,8 +42,7 @@ TEST(<prefix>, sample<i>) {
 <sample.input>
 )_TEST_");
     string ansString = testutil::trim(R"_TEST_(
-<sample.output>
-)_TEST_");
+<sample.output>)_TEST_");
 //TODO
 }
 >>

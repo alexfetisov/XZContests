@@ -16,10 +16,6 @@ public class Problem {
         this.samples = ImmutableList.copyOf(samples);
     }
 
-    public void addSample(final ProblemSample sample) {
-        samples.add(sample);
-    }
-
     public List<ProblemSample> getSamples() {
         return samples;
     }

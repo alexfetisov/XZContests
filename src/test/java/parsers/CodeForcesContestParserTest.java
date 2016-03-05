@@ -1,33 +1,23 @@
 package parsers;// Author: alexfetisov
 
-import com.google.common.collect.ImmutableList;
-import com.sun.deploy.util.StringUtils;
-import com.sun.org.glassfish.external.arc.Taxonomy;
 import constants.Platform;
 import data.Problem;
 import data.ProblemSample;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.internal.requests.FilterRequest;
-import parsers.CodeForcesContestParser;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class CodeForcesContestParserTest {
 
     @Test
-    public void testParserFromHTMLSingleProblemContest() {
-        String data = null;
-        try {
-            data = getData("contest_problem");
-        } catch (Exception e) {
-            Assert.fail();
-        }
+    public void testParserFromHTMLSingleProblemContest() throws IOException, URISyntaxException {
+        String data = getData("contest_problem");
         CodeForcesContestParser parser = new CodeForcesContestParser();
         final Problem problem = parser.getProblem(data);
 
@@ -46,13 +36,8 @@ public class CodeForcesContestParserTest {
     }
 
     @Test
-    public void testParserFromHTMLSingleProblemArchieve() {
-        String data = null;
-        try {
-            data = getData("archieve_problem");
-        } catch (Exception e) {
-            Assert.fail();
-        }
+    public void testParserFromHTMLSingleProblemArchieve() throws IOException, URISyntaxException {
+        String data = getData("archieve_problem");
         CodeForcesContestParser parser = new CodeForcesContestParser();
         final Problem problem = parser.getProblem(data);
 
@@ -66,8 +51,8 @@ public class CodeForcesContestParserTest {
         Assert.assertEquals("7 8\n6 2 9 2 7 2 3\n", problem.getSamples().get(0).getInput());
         Assert.assertEquals("6 5\n1 2 4 6 7\n", problem.getSamples().get(0).getOutput());
 
-        Assert.assertEquals("6 4\n2 2 2 3 3 3\n", problem.getSamples().get(0).getInput());
-        Assert.assertEquals("2 3\n1 2 3\n", problem.getSamples().get(0).getOutput());
+        Assert.assertEquals("6 4\n2 2 2 3 3 3\n", problem.getSamples().get(1).getInput());
+        Assert.assertEquals("2 3\n1 2 3\n", problem.getSamples().get(1).getOutput());
     }
 
     @Test
@@ -83,14 +68,21 @@ public class CodeForcesContestParserTest {
         Assert.assertEquals(-1, parser.getProblemId("BC. Some title"));
     }
 
-    String getData(final String fileName) throws IOException {
-        BufferedReader reader = new BufferedReader(
-            new FileReader("./test_resources/codeforces/" + fileName + ".html"));
-        List<String> lines = new ArrayList<>();
-        String line;
-        while((line = reader.readLine()) != null) {
-            lines.add(line);
-        }
-        return StringUtils.join(lines, "\n");
+    @Test
+    public void integrationTest() throws IOException {
+        CodeForcesContestParser parser = new CodeForcesContestParser();
+        final Problem problem = parser.parseSingleProblem(new URL("http://codeforces.com/contest/632/problem/F"));
+        Assert.assertEquals(problem.getSamples(),
+                            Arrays.asList(
+                                new ProblemSample("3\n0 1 2\n1 0 2\n2 2 0\n", "MAGIC\n"),
+                                new ProblemSample("2\n0 1\n2 3\n", "NOT MAGIC\n"),
+                                new ProblemSample("4\n0 1 2 3\n1 0 3 4\n2 3 0 5\n3 4 5 0\n", "NOT MAGIC\n")));
+        Assert.assertEquals(problem.getTitle(), "Magic Matrix");
+        Assert.assertEquals(problem.getTimeLimit(), 5);
+        Assert.assertEquals(problem.getMemoryLimit(), 512);
+    }
+
+    String getData(final String fileName) throws IOException, URISyntaxException {
+        return new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("codeforces/" + fileName + ".html").toURI())));
     }
 }
