@@ -1,4 +1,4 @@
-package data;// Author: alexfetisov
+package org.xzteam.cpphelper.data;// Author: alexfetisov
 
 public class ProblemSample {
     private final String input;

@@ -1,6 +1,6 @@
-package data;
+package org.xzteam.cpphelper.data;
 
-import constants.Platform;
+import org.xzteam.cpphelper.constants.Platform;
 
 import java.util.List;
 

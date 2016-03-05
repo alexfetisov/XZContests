@@ -1,16 +1,13 @@
 // Author: alexfetisov
 
-package parsers;
+package org.xzteam.cpphelper.parsers;
 
 import com.google.common.collect.ImmutableMap;
-import constants.Platform;
-import data.Problem;
-import data.ProblemSample;
+import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Problem;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 public interface IContestParser {

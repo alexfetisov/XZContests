@@ -1,6 +1,6 @@
 package org.xzteam.cpphelper.gen;
 
-import data.ProblemSample;
+import org.xzteam.cpphelper.data.ProblemSample;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;

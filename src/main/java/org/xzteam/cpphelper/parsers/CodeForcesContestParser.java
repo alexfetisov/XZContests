@@ -1,10 +1,10 @@
-package parsers;
+package org.xzteam.cpphelper.parsers;
 
 import com.google.common.annotations.VisibleForTesting;
-import constants.Platform;
-import data.Problem;
-import data.ProblemBuilder;
-import data.ProblemSample;
+import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Problem;
+import org.xzteam.cpphelper.data.ProblemBuilder;
+import org.xzteam.cpphelper.data.ProblemSample;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

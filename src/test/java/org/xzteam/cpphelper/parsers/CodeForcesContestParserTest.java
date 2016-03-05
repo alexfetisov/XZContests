@@ -1,8 +1,8 @@
-package parsers;// Author: alexfetisov
+package org.xzteam.cpphelper.parsers;// Author: alexfetisov
 
-import constants.Platform;
-import data.Problem;
-import data.ProblemSample;
+import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Problem;
+import org.xzteam.cpphelper.data.ProblemSample;
 import org.junit.Assert;
 import org.junit.Test;
 

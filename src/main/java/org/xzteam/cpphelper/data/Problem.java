@@ -1,7 +1,7 @@
-package data;// Author: alexfetisov
+package org.xzteam.cpphelper.data;// Author: alexfetisov
 
 import com.google.common.collect.ImmutableList;
-import constants.Platform;
+import org.xzteam.cpphelper.constants.Platform;
 
 import java.util.List;
 

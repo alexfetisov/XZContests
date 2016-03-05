@@ -1,6 +1,6 @@
-package data;// Author: alexfetisov
+package org.xzteam.cpphelper.data;// Author: alexfetisov
 
-import constants.Platform;
+import org.xzteam.cpphelper.constants.Platform;
 
 import java.net.URL;
 import java.util.List;
