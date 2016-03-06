@@ -10,7 +10,6 @@ import org.xzteam.cpphelper.data.ProblemBuilder;
 import org.xzteam.cpphelper.gen.GenTask;
 
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -33,22 +32,17 @@ public class TaskCommand implements Command {
 
     @Override
     public void execute(Main mainArgs) throws IOException {
-        try {
-            //TODO need a way to specify samples
-            final Problem problem = new ProblemBuilder()
-                .setPlatform(platform)
-                .setId(taskId)
-                .setContestId(contestId)
-                .setSamples(Collections.emptyList())
-                .setTimeLimit(timeLimit)
-                .setMemoryLimit(memoryLimit)
-                .createProblem();
-            Map<String, String> treeDef = new GenTask()
-                .setProblem(problem)
-                .gen();
-            FileUtil.generateTree(mainArgs.dir.resolve(problem.getDir()), treeDef);
-        } catch (FileAlreadyExistsException e) {
-            System.err.printf("%s is not a directory, aborting.\n", e.getFile());
-        }
+        final Problem problem = new ProblemBuilder()
+            .setPlatform(platform)
+            .setId(taskId)
+            .setContestId(contestId)
+            .setSamples(Collections.emptyList())
+            .setTimeLimit(timeLimit)
+            .setMemoryLimit(memoryLimit)
+            .createProblem();
+        Map<String, String> treeDef = new GenTask()
+            .setProblem(problem)
+            .gen();
+        FileUtil.generateTree(mainArgs.dir.resolve(problem.getDir()), treeDef);
     }
 }

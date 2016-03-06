@@ -1,4 +1,4 @@
-package org.xzteam.cpphelper.cli.commands;
+package org.xzteam.cpphelper.cli.commands.helpers;
 
 import com.beust.jcommander.IStringConverter;
 
