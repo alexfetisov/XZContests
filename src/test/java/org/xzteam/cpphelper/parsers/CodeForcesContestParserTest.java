@@ -4,15 +4,40 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xzteam.cpphelper.constants.Platform;
+import org.xzteam.cpphelper.data.Contest;
 import org.xzteam.cpphelper.data.Problem;
 import org.xzteam.cpphelper.data.ProblemSample;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CodeForcesContestParserTest {
+
+    @Test
+    public void testParserFromHTMLParseContestProblemLinks() throws IOException, URISyntaxException {
+        final String data = getData("contest");
+        final CodeForcesContestParser parser = new CodeForcesContestParser();
+        final List<URL> problemURLs = parser.getContestProblemUrls(data);
+        final List<URL> expectedList = new ArrayList<URL>();
+        for (char letter = 'A'; letter <= 'M'; ++letter) {
+            expectedList.add(new URL("http://codeforces.com/contest/589/problem/" + letter));
+        }
+        Assert.assertEquals(expectedList, problemURLs);
+    }
+
+    @Test
+    public void testParserFromHTMLParseContestNoProblems() throws IOException, URISyntaxException {
+        final String data = getData("contest_no_links");
+        final CodeForcesContestParser parser = new CodeForcesContestParser();
+        final Contest contest = parser.getContest(data);
+        Assert.assertTrue(contest.getTitle().startsWith("2015-2016 ACM-ICPC, NEERC"));
+        Assert.assertEquals(Platform.CODEFORCES, contest.getPlatform());
+        Assert.assertEquals(0, contest.getProblems().size());
+    }
 
     @Test
     public void testParserFromHTMLSingleProblemContest() throws IOException, URISyntaxException {

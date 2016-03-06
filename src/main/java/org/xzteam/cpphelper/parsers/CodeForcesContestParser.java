@@ -1,17 +1,17 @@
 package org.xzteam.cpphelper.parsers;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.xzteam.cpphelper.constants.Platform;
-import org.xzteam.cpphelper.data.Problem;
-import org.xzteam.cpphelper.data.ProblemBuilder;
-import org.xzteam.cpphelper.data.ProblemSample;
+import org.xzteam.cpphelper.data.*;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +20,55 @@ import java.util.regex.Pattern;
 
 public class CodeForcesContestParser implements IContestParser {
     private static final int TIMEOUT = 10000;
+    private static final String CODEFORCES_LINK = "http://codeforces.com";
 
     @Override
     public Problem parseSingleProblem(URL url) throws IOException {
         return getProblem(IOUtils.toString(url));
     }
 
+    @Override
+    public Contest parseContest(URL url) throws IOException {
+        return getContest(IOUtils.toString(url));
+    }
+
     @VisibleForTesting
-    Problem getProblem(String data) {
+    List<URL> getContestProblemUrls(final String data) throws MalformedURLException {
+        final Document document = Jsoup.parse(data);
+        final Element problemTable = document.getElementsByClass("problems").first();
+        final Elements problemRows = problemTable.getElementsByTag("tr");
+        final List<URL> result = new ArrayList<>();
+        for (int i = 1; i < problemRows.size(); ++i) {
+            final String problemLink = problemRows.get(i)
+                .getElementsByTag("td").get(0).getElementsByTag("a").get(0).attr("href");
+            result.add(new URL(CODEFORCES_LINK + problemLink));
+        }
+        return result;
+    }
+
+    @VisibleForTesting
+    Contest getContest(final String data) throws IOException {
+        final Document document = Jsoup.parse(data);
+        final String contestTitle = document
+            .getElementById("sidebar")
+            .getElementsByClass("rtable").get(0)
+            .getElementsByTag("tr").get(0)
+            .getElementsByTag("a").get(0)
+            .ownText();
+        final List<URL> problemUrls = getContestProblemUrls(data);
+        final List<Problem> contestProblems = new ArrayList<>();
+        for (final URL problemUrl : problemUrls) {
+            contestProblems.add(parseSingleProblem(problemUrl));
+        }
+        return new ContestBuilder()
+            .setPlatform(Platform.CODEFORCES)
+            .setTitle(contestTitle)
+            .setProblems(contestProblems)
+            .createContest();
+    }
+
+    @VisibleForTesting
+    Problem getProblem(final String data) {
         final Document document = Jsoup.parse(data);
         final String titleWithLetter = document.getElementsByClass("title").first().ownText();
         String id = getProblemId(titleWithLetter);
@@ -76,7 +117,7 @@ public class CodeForcesContestParser implements IContestParser {
     }
 
     @VisibleForTesting
-    String getContestId(String link) {
+    String getContestId(final String link) {
         final Pattern pContest = Pattern.compile("/contest/(\\d+)");
         final Pattern pGym = Pattern.compile("/gym/(\\d+)");
         Matcher m = pContest.matcher(link);
@@ -97,6 +138,5 @@ public class CodeForcesContestParser implements IContestParser {
         }
         return null;
     }
-
 
 }
