@@ -125,6 +125,8 @@ namespace testutil {
     void testSolution(F solve, C checker, const string& inString, const string& ansString) {
         cout \<\< inString \<\< "\n";
         cout \<\< "--------------\n";
+        cout \<\< ansString \<\< "\n";
+        cout \<\< "==============\n";
         istringstream sin(inString), sans(ansString);
         stringstream sout;
         exec\<TL>(solve, sin, sout);

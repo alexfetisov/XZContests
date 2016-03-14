@@ -1,7 +1,6 @@
 package org.xzteam.cpphelper.parsers;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -118,15 +117,10 @@ public class CodeForcesContestParser implements IContestParser {
 
     @VisibleForTesting
     String getContestId(final String link) {
-        final Pattern pContest = Pattern.compile("/contest/(\\d+)");
-        final Pattern pGym = Pattern.compile("/gym/(\\d+)");
+        final Pattern pContest = Pattern.compile("/(?:contest|problemset)/(\\d+)");
         Matcher m = pContest.matcher(link);
         if (m.matches()) {
             return m.group(1);
-        }
-        m = pGym.matcher(link);
-        if (m.matches()) {
-            return "gym" + m.group(1);
         }
         return null;
     }

@@ -33,7 +33,7 @@ public class InitCommand implements Command {
                 .gen();
             FileUtil.generateTree(mainArgs.dir, treeDef);
         } catch (FileAlreadyExistsException e) {
-            System.err.printf("%s is not a directory, aborting.\n", e.getFile());
+            System.err.printf("%s already exists, aborting.\n", e.getFile());
         }
     }
 

@@ -8,6 +8,7 @@ import org.xzteam.cpphelper.parsers.IContestParser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 
 @Parameters(commandNames = "parse-contest", commandDescription = "Parse contest and generate tasks")
 public class ParseContestCommand implements Command {
@@ -16,7 +17,11 @@ public class ParseContestCommand implements Command {
 
     @Override
     public void execute(Main mainArgs) throws IOException {
-        Contest contest = IContestParser.parse(url);
-        // TODO: create all for contest.
+        try {
+            Contest contest = IContestParser.parse(url);
+            // TODO: create all for contest.
+        } catch (FileAlreadyExistsException e) {
+            System.err.printf("%s already exists, aborting.\n", e.getFile());
+        }
     }
 }
