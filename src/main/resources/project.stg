@@ -8,7 +8,7 @@ find_package(Boost COMPONENTS system filesystem regex unit_test_framework)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
   -Wall -Wextra -Wshadow -Wfloat-equal -Wconversion \
-  -Wno-sign-conversion -Wno-sign-compare")
+  -Wno-sign-conversion -Wno-sign-compare -Wunused")
 
 
 set(CLANG_INLINER_FLAGS -target x86_64-aple-darwin
