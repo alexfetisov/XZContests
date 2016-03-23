@@ -10,6 +10,7 @@ import org.xzteam.cpphelper.constants.Platform;
 import org.xzteam.cpphelper.data.Contest;
 import org.xzteam.cpphelper.data.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import sun.reflect.generics.tree.DoubleSignature;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,32 +36,34 @@ public class TimusParser implements IContestParser {
     @VisibleForTesting
     Problem getProblem(final String data) {
         final Document document = Jsoup.parse(data);
-        final String titleWithLetter = document.getElementsByClass("title").first().ownText();
+        final String titleWithLetter = document
+            .getElementsByClass("problem_title")
+            .first()
+            .ownText();
         String id = getProblemId(titleWithLetter);
-        final String title;
-        if (id != null) {
-            title = titleWithLetter.substring(2).trim();
-        } else {
-            title = titleWithLetter.trim();
-            id = title.toLowerCase().replaceAll("[^a-z0-9]+", "_");
-        }
-        final Element contestLink = document.select("ul.second-level-menu-list li a").first();
-        final String contestId = contestLink == null ? null : getContestId(contestLink.attr("href"));
-        final int timeLimit = Integer.parseInt(
-            document.getElementsByClass("time-limit").first().ownText().split(" ")[0]);
-        final int memoryLimit = Integer.parseInt(
-            document.getElementsByClass("memory-limit").first().ownText().split(" ")[0]);
-        final Elements inputElements = document.getElementsByClass("input");
-        final Elements outputElements = document.getElementsByClass("output");
-        final int numberOfElements = inputElements.size();
+        final String title = titleWithLetter.substring(5).trim();
+        int[] limits = parseProblemLimits(
+            document.getElementsByClass("problem_limits")
+                    .first()
+                    .html()
+                    .replace("<br />", "<br/>")
+                    .replace("<br/>", "\n"));
+        final int timeLimit = limits[0];
+        final int memoryLimit = limits[1];
+
+        final Element samples = document.getElementsByClass("sample").first();
+        final Elements tableRows = samples.getElementsByTag("tr");
+
+        int numberOfElements = tableRows.size() - 1;
         List<ProblemSample> problemSamples = new ArrayList<>(numberOfElements);
-        for (int i = 0; i < numberOfElements; ++i) {
-            final Element input = inputElements.get(i);
-            final Element output = outputElements.get(i);
-            String inputData = input.getElementsByTag("pre").get(0).html()
-                .replace("<br />", "<br/>").replace("<br/>", "\n");
-            String outputData = output.getElementsByTag("pre").get(0).html()
-                .replace("<br />", "<br/>").replace("<br/>", "\n");
+        for (int i = 1; i < tableRows.size(); ++i) {
+            Element row = tableRows.get(i);
+            Elements ioData = row.getElementsByTag("pre");
+
+            String inputData = ioData.get(0).html()
+                .replace("<br />", "<br/>").replace("<br/>", "\n").replace("\r", "");
+            String outputData = ioData.get(1).html()
+                .replace("<br />", "<br/>").replace("<br/>", "\n").replace("\r", "");
             if (!inputData.endsWith("\n")) {
                 inputData += "\n";
             }
@@ -69,39 +72,43 @@ public class TimusParser implements IContestParser {
             }
             problemSamples.add(new ProblemSample(inputData, outputData));
         }
-
         return new ProblemBuilder()
             .setId(id)
-            .setContestId(contestId)
+            .setContestId(null)
             .setMemoryLimit(memoryLimit)
             .setTimeLimit(timeLimit)
-            .setPlatform(Platform.CODEFORCES)
+            .setPlatform(Platform.TIMUS)
             .setTitle(title)
             .setSamples(problemSamples)
             .createProblem();
     }
 
-    @VisibleForTesting
-    String getContestId(final String link) {
-        final Pattern pContest = Pattern.compile("/contest/(\\d+)");
-        final Pattern pGym = Pattern.compile("/gym/(\\d+)");
-        Matcher m = pContest.matcher(link);
-        if (m.matches()) {
-            return m.group(1);
+    private int[] parseProblemLimits(String limits) {
+        String[] tokens = limits.split("\n");
+        int tl = -1, ml = -1;
+        for (String token : tokens) {
+            int id = token.indexOf(':');
+            int number;
+            if (id != -1) {
+                String toParse = token.split(":")[1].trim().split(" ")[0];
+                double cur = Double.parseDouble(toParse);
+                number = (int) cur;
+            } else {
+                continue;
+            }
+
+            if (tl == -1) {
+                tl = number;
+            } else {
+                ml = number;
+            }
         }
-        m = pGym.matcher(link);
-        if (m.matches()) {
-            return "gym" + m.group(1);
-        }
-        return null;
+        return new int[] {tl, ml};
     }
 
     @VisibleForTesting
     String getProblemId(final String title) {
-        if (title.length() > 1 && title.charAt(1) == '.' && Character.isUpperCase(title.charAt(0))) {
-            return title.substring(0, 1);
-        }
-        return null;
+        return title.substring(0, 4);
     }
 
 }

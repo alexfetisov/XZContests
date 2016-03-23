@@ -42,7 +42,7 @@ public class TimusParserTest {
         final Problem problem = parser.parseSingleProblem(
             new URL("http://acm.timus.ru/problem.aspx?space=1&num=1202"));
 
-        Assert.assertEquals(Arrays.asList(new ProblemSample("2\n0 0 3 5\n 3 1 5 7\n", "8\n")),
+        Assert.assertEquals(Arrays.asList(new ProblemSample("2\n0 0 3 5\n3 1 5 7\n", "8\n")),
                             problem.getSamples());
         Assert.assertEquals("Rectangles Travel", problem.getTitle());
         Assert.assertEquals(1, problem.getTimeLimit());
