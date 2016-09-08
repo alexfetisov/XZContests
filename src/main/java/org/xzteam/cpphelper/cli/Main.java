@@ -9,6 +9,7 @@ import org.xzteam.cpphelper.cli.commands.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class Main {
     @Parameter(names = {"-h", "--help"}, help = true)
@@ -18,6 +19,7 @@ public class Main {
     public Path dir = Paths.get(".");
 
     public static void main(String[] args) {
+        System.err.println(Arrays.toString(args));
         Main main = new Main();
         JCommander jc = new JCommander(main);
         jc.setProgramName("cpphelper-cli");

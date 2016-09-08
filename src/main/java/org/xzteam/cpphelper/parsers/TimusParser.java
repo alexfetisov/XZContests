@@ -10,15 +10,11 @@ import org.xzteam.cpphelper.constants.Platform;
 import org.xzteam.cpphelper.data.Contest;
 import org.xzteam.cpphelper.data.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import sun.reflect.generics.tree.DoubleSignature;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TimusParser implements IContestParser {
     private static final int TIMEOUT = 10000;

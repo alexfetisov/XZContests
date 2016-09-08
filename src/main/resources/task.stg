@@ -22,6 +22,7 @@ mainh() ::= <<
 // vvvvvvvvvvvvvvvvv Library code start
 
 #include "prelude.h"
+#include "io.h"
 
 // ^^^^^^^^^^^^^^^^^ Library code end
 

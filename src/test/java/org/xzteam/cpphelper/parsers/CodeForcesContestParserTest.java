@@ -24,7 +24,7 @@ public class CodeForcesContestParserTest {
         final List<URL> problemURLs = parser.getContestProblemUrls(data);
         final List<URL> expectedList = new ArrayList<URL>();
         for (char letter = 'A'; letter <= 'M'; ++letter) {
-            expectedList.add(new URL("http://codeforces.com/contest/589/problem/" + letter));
+            expectedList.add(new URL("http://CODEFORCES.com/contest/589/problem/" + letter));
         }
         Assert.assertEquals(expectedList, problemURLs);
     }
@@ -95,7 +95,7 @@ public class CodeForcesContestParserTest {
     @Test
     public void integrationTest() throws IOException {
         CodeForcesContestParser parser = new CodeForcesContestParser();
-        final Problem problem = parser.parseSingleProblem(new URL("http://codeforces.com/contest/632/problem/F"));
+        final Problem problem = parser.parseSingleProblem(new URL("http://CODEFORCES.com/contest/632/problem/F"));
         Assert.assertEquals(Arrays.asList(
                                 new ProblemSample("3\n0 1 2\n1 0 2\n2 2 0\n", "MAGIC\n"),
                                 new ProblemSample("2\n0 1\n2 3\n", "NOT MAGIC\n"),

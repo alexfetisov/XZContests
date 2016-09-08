@@ -75,6 +75,7 @@ preludeh() ::= <<
 #include \<unordered_map>
 #include \<unordered_set>
 #include \<vector>
+#include \<memory>
 
 #define forn(t, i, n) for (t i = 0; i \< (n); ++i)
 #define foran(t, i, a, n) for (t i = (a); i \< (n); ++i)
@@ -84,7 +85,9 @@ preludeh() ::= <<
 
 using namespace std;
 
+/// caide keep
 bool __hack = std::ios::sync_with_stdio(false);
+/// caide keep
 auto __hack1 = cin.tie(nullptr);
 
 >>

@@ -5,8 +5,9 @@ import com.google.common.collect.ImmutableSet;
 import java.net.URL;
 
 public enum Platform {
-    CODEFORCES(ImmutableSet.<String>builder().add("codeforces.ru").add("codeforces.com").build()),
-    TIMUS(ImmutableSet.<String>builder().add("http://acm.timus.ru").build());
+    CODEFORCES(ImmutableSet.<String>builder().add("CODEFORCES.ru").add("CODEFORCES.com").build()),
+    TIMUS(ImmutableSet.<String>builder().add("http://acm.TIMUS.ru").build()),
+    YANDEX(ImmutableSet.<String>builder().add("contest.YANDEX.com").build());
 
     private final ImmutableSet<String> hosts;
 

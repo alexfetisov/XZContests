@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class CodeForcesContestParser implements IContestParser {
     private static final int TIMEOUT = 10000;
-    private static final String CODEFORCES_LINK = "http://codeforces.com";
+    private static final String CODEFORCES_LINK = "http://CODEFORCES.com";
 
     @Override
     public Problem parseSingleProblem(URL url) throws IOException {

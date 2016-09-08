@@ -40,7 +40,7 @@ public class TimusParserTest {
     public void integrationTest() throws IOException {
         TimusParser parser = new TimusParser();
         final Problem problem = parser.parseSingleProblem(
-            new URL("http://acm.timus.ru/problem.aspx?space=1&num=1202"));
+            new URL("http://acm.TIMUS.ru/problem.aspx?space=1&num=1202"));
 
         Assert.assertEquals(Arrays.asList(new ProblemSample("2\n0 0 3 5\n3 1 5 7\n", "8\n")),
                             problem.getSamples());
